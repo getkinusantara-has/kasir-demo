@@ -5,7 +5,7 @@ const idb=(mode,fn)=>new Promise((ok,no)=>{const o=indexedDB.open('kasir',1);
  o.onsuccess=()=>{const t=o.result.transaction('f',mode),r=fn(t.objectStore('f'));
  t.oncomplete=()=>{o.result.close();ok(r.result)};t.onabort=()=>no(t.error)}});
 const SKEMA=`
-CREATE TABLE menu(menu_id INTEGER PRIMARY KEY,nama_menu TEXT NOT NULL,harga INTEGER NOT NULL CHECK(harga>=0),kategori TEXT,stok INTEGER NOT NULL CHECK(stok>=0),status_aktif INTEGER NOT NULL DEFAULT 1);
+CREATE TABLE menu(menu_id INTEGER PRIMARY KEY,nama_menu TEXT NOT NULL,harga INTEGER NOT NULL CHECK(harga>=0),kategori TEXT,stok INTEGER NOT NULL CHECK(stok>=0),status_aktif INTEGER NOT NULL DEFAULT 1,gambar TEXT);
 CREATE TABLE meja(meja_id INTEGER PRIMARY KEY,kapasitas INTEGER NOT NULL,status_okupansi TEXT NOT NULL DEFAULT 'KOSONG' CHECK(status_okupansi IN('KOSONG','TERISI')),aktif INTEGER NOT NULL DEFAULT 1);
 CREATE TABLE transaksi(transaksi_id INTEGER PRIMARY KEY,meja_id INTEGER REFERENCES meja,total_harga INTEGER NOT NULL,metode_pembayaran TEXT NOT NULL,uang_diterima INTEGER NOT NULL,kembalian INTEGER NOT NULL,waktu_transaksi TEXT NOT NULL DEFAULT(datetime('now','localtime')),status TEXT NOT NULL DEFAULT 'LUNAS',alasan_void TEXT,waktu_void TEXT);
 CREATE TABLE detail_transaksi(detail_id INTEGER PRIMARY KEY,transaksi_id INTEGER NOT NULL REFERENCES transaksi,menu_id INTEGER NOT NULL REFERENCES menu,nama_menu TEXT,harga_satuan INTEGER,qty INTEGER CHECK(qty>0));
@@ -15,7 +15,8 @@ INSERT INTO menu(nama_menu,harga,kategori,stok)VALUES('Kopi Susu Aren',18000,'Mi
 export function q(sql,p=[]){const s=db.prepare(sql),h=[];s.bind(p);while(s.step())h.push(s.getAsObject());s.free();return h}
 export const run=(sql,p)=>db.run(sql,p);
 function muat(bytes){db=new SQL.Database(bytes);db.run('PRAGMA foreign_keys=ON');
- if(bytes&&!q("SELECT 1 FROM pragma_table_info('meja') WHERE name='aktif'").length)db.run('ALTER TABLE meja ADD COLUMN aktif INTEGER NOT NULL DEFAULT 1')}
+ if(bytes&&!q("SELECT 1 FROM pragma_table_info('meja') WHERE name='aktif'").length)db.run('ALTER TABLE meja ADD COLUMN aktif INTEGER NOT NULL DEFAULT 1');
+ if(bytes&&!q("SELECT 1 FROM pragma_table_info('menu') WHERE name='gambar'").length)db.run('ALTER TABLE menu ADD COLUMN gambar TEXT')}
 export const ekspor=()=>{const b=db.export();db.run('PRAGMA foreign_keys=ON');return b};
 const simpan=()=>{const b=ekspor();return idb('readwrite',s=>s.put(b,'db'))};
 export async function init(){SQL=await initSqlJs({locateFile:f=>CDN+f});const b=await idb('readonly',s=>s.get('db'));muat(b);if(!b){db.run(SKEMA);await simpan()}}
