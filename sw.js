@@ -1,4 +1,4 @@
-const V='kasir-v7',C='https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/sql-wasm.';
+const V='kasir-v8',C='https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/sql-wasm.';
 const F=['./','index.html','style.css','manifest.webmanifest','icons/192.png','icons/512.png',...['app','db','logic','printer','excel','views/kasir','views/meja','views/menu','views/laporan'].map(x=>`js/${x}.js`),C+'js',C+'wasm'];
 self.oninstall=e=>{self.skipWaiting();e.waitUntil(caches.open(V).then(c=>Promise.all(F.map(u=>c.add(u).catch(()=>{})))))};
 self.onactivate=e=>e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x.startsWith('kasir-')&&x!==V).map(x=>caches.delete(x)))).then(()=>self.clients.claim()));
