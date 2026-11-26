@@ -2,7 +2,7 @@ import {init} from './db.js';
 export const rp=n=>'Rp'+Number(n).toLocaleString('id-ID');
 export const esc=s=>String(s??'').replace(/[&<>"]/g,c=>`&#${c.charCodeAt(0)};`);
 export const coba=async fn=>{try{await fn()}catch(e){alert(e.message)}};
-async function buka(){const n=['kasir','meja','menu','laporan'].find(x=>'#'+x===location.hash)||'kasir';
+async function buka(){const n=['kasir','meja','booking','menu','laporan'].find(x=>'#'+x===location.hash)||'kasir';
  document.querySelectorAll('nav a').forEach(a=>a.classList.toggle('on',a.hash==='#'+n));
  const m=await import(`./views/${n}.js`),el=document.createElement('div');document.querySelector('main').replaceChildren(el);m.default(el)}
 navigator.locks.request('kasir',{ifAvailable:true},async l=>{

@@ -1,9 +1,10 @@
 import {q,ekspor,impor} from '../db.js';import {batalkan} from '../logic.js';import {cetak,sambung} from '../printer.js';import {rp,esc,coba} from '../app.js';
 export default function view(el,tgl=new Date().toLocaleDateString('sv')){
  const w="date(waktu_transaksi)=? AND status='LUNAS'";
- const r=q(`SELECT count(*) n,coalesce(sum(total_harga),0) t FROM transaksi WHERE ${w}`,[tgl])[0];
+ const r=q(`SELECT count(*) n,coalesce(sum(total_harga),0) t,coalesce(sum(dp_dipakai),0) dp FROM transaksi WHERE ${w}`,[tgl])[0];
  el.innerHTML=`<input type="date" value="${tgl}" id="tgl"><h2>${rp(r.t)} dari ${r.n} transaksi</h2>
- ${q(`SELECT metode_pembayaran m,sum(total_harga) t FROM transaksi WHERE ${w} GROUP BY 1`,[tgl]).map(x=>`<div class="baris">${x.m}<b>${rp(x.t)}</b></div>`).join('')}
+ ${q(`SELECT metode_pembayaran m,sum(total_harga-dp_dipakai) t FROM transaksi WHERE ${w} GROUP BY 1 HAVING t>0`,[tgl]).map(x=>`<div class="baris">${x.m}<b>${rp(x.t)}</b></div>`).join('')}
+ ${r.dp?`<div class="baris">Dibayar dengan DP<b>${rp(r.dp)}</b></div>`:''}
  <h3>Menu terjual</h3>${q(`SELECT d.nama_menu n,sum(qty) j FROM detail_transaksi d JOIN transaksi USING(transaksi_id) WHERE ${w} GROUP BY 1 ORDER BY 2 DESC`,[tgl]).map(x=>`<div class="baris">${esc(x.n)}<b>${x.j}</b></div>`).join('')}
  <h3>Transaksi</h3>${q('SELECT * FROM transaksi WHERE date(waktu_transaksi)=? ORDER BY 1 DESC',[tgl]).map(t=>`<div class="baris"><span>#${t.transaksi_id} ${rp(t.total_harga)} ${t.status}</span><span><button data-c="${t.transaksi_id}">Cetak</button> ${t.status==='LUNAS'?`<button data-v="${t.transaksi_id}">Void</button>`:''}</span></div>`).join('')}
  <h3>Alat</h3><button id="bt">Sambungkan printer Bluetooth</button> <button id="bk">Unduh backup</button> <label>Pulihkan backup <input type="file" id="pl" accept=".sqlite"></label>`;

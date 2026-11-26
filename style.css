@@ -11,6 +11,7 @@ button,input,select{font:inherit;padding:10px;border:1px solid #9bb0a3;border-ra
 button{cursor:pointer}button:disabled{opacity:.45}.utama{background:#1f4d3a;color:#fff}
 .mj{color:#fff;border:0;min-height:72px}
 .mj.kosong{background:#2e7d4f}.mj.terisi{background:#b3261e}.mj.bawa{background:#4b5a52}
+.mj.jb{background:#b8860b}.mj.tamu{background:#1565c0}
 .mj.pilih{outline:4px solid #17241d;outline-offset:2px}
 .mj:disabled{opacity:.6;cursor:not-allowed}
 .kartu{display:flex;flex-direction:column;gap:8px;background:#fff;border-radius:12px;padding:8px;box-shadow:0 1px 4px rgba(23,36,29,.12);border:2px solid transparent}
@@ -35,6 +36,7 @@ button,input,select{font:inherit;padding:10px;border:1px solid #9bb0a3;border-ra
 button{cursor:pointer}button:disabled{opacity:.45}.utama{background:#1f4d3a;color:#fff}
 .mj{color:#fff;border:0;min-height:72px}
 .mj.kosong{background:#2e7d4f}.mj.terisi{background:#b3261e}.mj.bawa{background:#4b5a52}
+.mj.jb{background:#b8860b}.mj.tamu{background:#1565c0}
 .mj.pilih{outline:4px solid #17241d;outline-offset:2px}
 .mj:disabled{opacity:.6;cursor:not-allowed}
 .kartu{display:flex;flex-direction:column;gap:4px}
@@ -57,3 +59,6 @@ form{display:flex;flex-wrap:wrap;gap:8px}#struk{display:none}
  nav{position:fixed;bottom:0;left:0;right:0;z-index:6;background:#fff;border-top:1px solid #c9d6ce;gap:0;padding-bottom:env(safe-area-inset-bottom)}nav a{flex:1;text-align:center;border-radius:0;padding:14px 4px;font-size:.9em}
  main{padding:12px 12px 140px}.grid{grid-template-columns:repeat(2,1fr)}
  .bar{display:flex;justify-content:space-between;align-items:center;gap:8px;position:fixed;left:12px;right:12px;bottom:calc(58px + env(safe-area-inset-bottom));z-index:6;background:#1f4d3a;color:#fff;border:0;padding:12px 16px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,.25)}}
+.fl{display:flex;flex-direction:column;gap:2px;font-size:.8em;color:#4b5a52;flex:1 1 150px;margin:0}.fl input,.fl select{width:100%;font-size:1.25em}
+form.nota{display:flex;flex-wrap:wrap}form.nota>*{width:auto;margin-top:0}form.nota .utama{flex:1 1 100%;min-height:46px}
+.bk.BATAL{opacity:.5}.merah{color:#b3261e}.aksi{display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end}

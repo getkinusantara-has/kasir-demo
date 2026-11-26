@@ -4,10 +4,11 @@ const idb=(mode,fn)=>new Promise((ok,no)=>{const o=indexedDB.open('kasir',1);
  o.onupgradeneeded=()=>o.result.createObjectStore('f');o.onerror=()=>no(o.error);
  o.onsuccess=()=>{const t=o.result.transaction('f',mode),r=fn(t.objectStore('f'));
  t.oncomplete=()=>{o.result.close();ok(r.result)};t.onabort=()=>no(t.error)}});
+const BOOKING='CREATE TABLE IF NOT EXISTS booking(booking_id INTEGER PRIMARY KEY,meja_id INTEGER NOT NULL REFERENCES meja,nama TEXT NOT NULL,hp TEXT,jumlah_orang INTEGER,mulai TEXT NOT NULL,durasi_menit INTEGER NOT NULL DEFAULT 120,toleransi_menit INTEGER NOT NULL DEFAULT 15,dp INTEGER NOT NULL DEFAULT 0,catatan TEXT,status TEXT NOT NULL DEFAULT \'MENUNGGU\' CHECK(status IN(\'MENUNGGU\',\'DATANG\',\'BATAL\')),dibuat TEXT NOT NULL DEFAULT(datetime(\'now\',\'localtime\')),transaksi_id INTEGER,dp_nasib TEXT CHECK(dp_nasib IN(\'KEMBALI\',\'HANGUS\')))';
 const SKEMA=`
 CREATE TABLE menu(menu_id INTEGER PRIMARY KEY,nama_menu TEXT NOT NULL,harga INTEGER NOT NULL CHECK(harga>=0),kategori TEXT,stok INTEGER NOT NULL CHECK(stok>=0),status_aktif INTEGER NOT NULL DEFAULT 1,gambar TEXT);
 CREATE TABLE meja(meja_id INTEGER PRIMARY KEY,kapasitas INTEGER NOT NULL,status_okupansi TEXT NOT NULL DEFAULT 'KOSONG' CHECK(status_okupansi IN('KOSONG','TERISI')),aktif INTEGER NOT NULL DEFAULT 1);
-CREATE TABLE transaksi(transaksi_id INTEGER PRIMARY KEY,meja_id INTEGER REFERENCES meja,total_harga INTEGER NOT NULL,metode_pembayaran TEXT NOT NULL,uang_diterima INTEGER NOT NULL,kembalian INTEGER NOT NULL,waktu_transaksi TEXT NOT NULL DEFAULT(datetime('now','localtime')),status TEXT NOT NULL DEFAULT 'LUNAS',alasan_void TEXT,waktu_void TEXT);
+CREATE TABLE transaksi(transaksi_id INTEGER PRIMARY KEY,meja_id INTEGER REFERENCES meja,total_harga INTEGER NOT NULL,metode_pembayaran TEXT NOT NULL,uang_diterima INTEGER NOT NULL,kembalian INTEGER NOT NULL,waktu_transaksi TEXT NOT NULL DEFAULT(datetime('now','localtime')),status TEXT NOT NULL DEFAULT 'LUNAS',alasan_void TEXT,waktu_void TEXT,dp_dipakai INTEGER NOT NULL DEFAULT 0);
 CREATE TABLE detail_transaksi(detail_id INTEGER PRIMARY KEY,transaksi_id INTEGER NOT NULL REFERENCES transaksi,menu_id INTEGER NOT NULL REFERENCES menu,nama_menu TEXT,harga_satuan INTEGER,qty INTEGER CHECK(qty>0));
 CREATE TABLE pengaturan(kunci TEXT PRIMARY KEY,nilai TEXT);
 INSERT INTO meja(kapasitas)VALUES(2),(2),(4),(4),(4),(6);
@@ -16,7 +17,10 @@ export function q(sql,p=[]){const s=db.prepare(sql),h=[];s.bind(p);while(s.step(
 export const run=(sql,p)=>db.run(sql,p);
 function muat(bytes){db=new SQL.Database(bytes);db.run('PRAGMA foreign_keys=ON');
  if(bytes&&!q("SELECT 1 FROM pragma_table_info('meja') WHERE name='aktif'").length)db.run('ALTER TABLE meja ADD COLUMN aktif INTEGER NOT NULL DEFAULT 1');
- if(bytes&&!q("SELECT 1 FROM pragma_table_info('menu') WHERE name='gambar'").length)db.run('ALTER TABLE menu ADD COLUMN gambar TEXT')}
+ if(bytes&&!q("SELECT 1 FROM pragma_table_info('menu') WHERE name='gambar'").length)db.run('ALTER TABLE menu ADD COLUMN gambar TEXT');
+ if(bytes&&!q("SELECT 1 FROM pragma_table_info('transaksi') WHERE name='dp_dipakai'").length)db.run('ALTER TABLE transaksi ADD COLUMN dp_dipakai INTEGER NOT NULL DEFAULT 0');
+ db.run(BOOKING);
+ if(!q("SELECT 1 FROM pragma_table_info('booking') WHERE name='dp_nasib'").length)db.run("ALTER TABLE booking ADD COLUMN dp_nasib TEXT CHECK(dp_nasib IN('KEMBALI','HANGUS'))")}
 export const ekspor=()=>{const b=db.export();db.run('PRAGMA foreign_keys=ON');return b};
 const simpan=()=>{const b=ekspor();return idb('readwrite',s=>s.put(b,'db'))};
 export async function init(){SQL=await initSqlJs({locateFile:f=>CDN+f});const b=await idb('readonly',s=>s.get('db'));muat(b);if(!b){db.run(SKEMA);await simpan()}}
