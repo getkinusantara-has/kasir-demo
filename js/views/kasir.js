@@ -15,7 +15,7 @@ export default function view(el){
  el.innerHTML=`<div class="dua"><div class="grid">${menu.map(m=>`<button data-t="${m.menu_id}" ${m.stok<=(k.get(m.menu_id)||0)?'disabled':''}><b>${esc(m.nama_menu)}</b><br>${rp(m.harga)}<br><small>Stok ${m.stok}</small></button>`).join('')}</div>
  <div class="nota">
  <div class="grid kecil"><button class="mj bawa${meja===''?' pilih':''}" data-m="">Bawa pulang</button>${semua.map(m=>{const t=m.status_okupansi==='TERISI';return `<button class="mj ${t?'terisi':'kosong'}${String(m.meja_id)===String(meja)?' pilih':''}" data-m="${m.meja_id}" ${t?'disabled':''}>Meja ${m.meja_id}<br><small>${m.kapasitas} kursi</small></button>`}).join('')}</div>
- ${isi.map(i=>`<div class="baris"><span>${i.n} × ${esc(i.nama_menu)}</span><button data-k="${i.menu_id}" aria-label="Kurangi">−</button></div>`).join('')||'<p>Ketuk menu untuk mulai pesanan.</p>'}
+ ${isi.map(i=>`<div class="baris"><span>${esc(i.nama_menu)}<br><small>${rp(i.harga)}</small></span><span style="display:flex;gap:4px;align-items:center"><button data-k="${i.menu_id}" aria-label="Kurangi">−</button><input type="number" inputmode="numeric" min="0" max="${i.stok}" value="${i.n}" data-q="${i.menu_id}" aria-label="Jumlah ${esc(i.nama_menu)}" style="width:56px;text-align:center"><button data-p="${i.menu_id}" aria-label="Tambah" ${i.n>=i.stok?'disabled':''}>+</button></span></div>`).join('')||'<p>Ketuk menu untuk mulai pesanan.</p>'}
  <h2>${rp(total)}</h2>
  <select id="metode"><option>Tunai</option><option>QRIS</option><option>Debit</option></select>
  ${metode==='Tunai'?`<input id="uang" type="number" inputmode="numeric" placeholder="Uang diterima" value="${esc(uang)}"><div class="uang"><button data-u="pas">Uang pas</button>${[20000,50000,100000].map(n=>`<button data-u="${n}">${n/1000}rb</button>`).join('')}</div>`:''}
@@ -33,12 +33,18 @@ export default function view(el){
    if(tunai&&(uang===''||u<total))ok=false;
    merah=tunai&&uang!==''&&u<total}
   kb.textContent=t;kb.classList.toggle('kurang',merah);by.disabled=!ok};
+ const ubah=(id,n)=>{n>0?k.set(id,n):k.delete(id);view(el)};
+ const stokOf=id=>menu.find(m=>m.menu_id===id).stok;
  $('#metode').value=metode;
  $('#metode').onchange=e=>{metode=e.target.value;view(el)};
  el.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{meja=b.dataset.m;view(el)});
- el.querySelectorAll('[data-t],[data-k]').forEach(b=>b.onclick=()=>{
-  const id=+(b.dataset.t||b.dataset.k),n=(k.get(id)||0)+(b.dataset.t?1:-1);
-  n?k.set(id,n):k.delete(id);view(el)});
+ el.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{const id=+b.dataset.t;ubah(id,(k.get(id)||0)+1)});
+ el.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>{const id=+b.dataset.k;ubah(id,k.get(id)-1)});
+ el.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{const id=+b.dataset.p;ubah(id,k.get(id)+1)});
+ el.querySelectorAll('[data-q]').forEach(inp=>inp.onchange=()=>{
+  const id=+inp.dataset.q;let n=Math.floor(+inp.value);
+  if(!Number.isFinite(n))n=k.get(id);
+  ubah(id,Math.min(Math.max(n,0),stokOf(id)))});
  if($('#uang')){
   $('#uang').oninput=e=>{uang=e.target.value;hitung()};
   el.querySelectorAll('[data-u]').forEach(b=>b.onclick=()=>{uang=b.dataset.u==='pas'?String(total):b.dataset.u;$('#uang').value=uang;hitung()})}
