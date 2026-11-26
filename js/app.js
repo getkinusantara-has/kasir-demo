@@ -2,6 +2,13 @@ import {init} from './db.js';
 export const rp=n=>'Rp'+Number(n).toLocaleString('id-ID');
 export const esc=s=>String(s??'').replace(/[&<>"]/g,c=>`&#${c.charCodeAt(0)};`);
 export const coba=async fn=>{try{await fn()}catch(e){alert(e.message)}};
+const jamAtas=()=>{
+ const e=document.querySelector('#jam-atas');if(!e)return;
+ const d=new Date(),tgl=d.toLocaleDateString('id-ID',{weekday:'long',day:'2-digit',month:'short',year:'numeric'});
+ const jam=d.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit',hour12:false});
+ e.textContent=`${tgl} · ${jam}`;
+};
+setInterval(jamAtas,1000);jamAtas();
 async function buka(){const n=['kasir','meja','booking','menu','laporan'].find(x=>'#'+x===location.hash)||'kasir';
  document.querySelectorAll('nav a').forEach(a=>a.classList.toggle('on',a.hash==='#'+n));
  const m=await import(`./views/${n}.js`),el=document.createElement('div');document.querySelector('main').replaceChildren(el);m.default(el)}
