@@ -8,18 +8,20 @@ export default function view(el){
   return}
  const menu=q('SELECT * FROM menu WHERE status_aktif=1 ORDER BY kategori,nama_menu');
  const semua=q('SELECT * FROM meja WHERE aktif=1 ORDER BY meja_id');
- if(meja&&!semua.some(m=>String(m.meja_id)===String(meja)&&m.status_okupansi==='KOSONG'))meja='';
+ const info=infoMeja(),kunci=id=>info.get(+id)?.status==='MENUNGGU';
+ if(meja&&(!semua.some(m=>String(m.meja_id)===String(meja)&&m.status_okupansi==='KOSONG')||kunci(meja)))meja='';
  for(const id of k.keys())if(!menu.some(m=>m.menu_id===id))k.delete(id);
  const isi=[...k].map(([id,n])=>({...menu.find(m=>m.menu_id===id),n}));
  const total=isi.reduce((a,i)=>a+i.harga*i.n,0);
  const kats=[...new Set(menu.map(m=>m.kategori||'Lainnya'))].sort();
  if(kat!=='Semua'&&!kats.includes(kat))kat='Semua';
  const tampil=menu.filter(m=>kat==='Semua'||(m.kategori||'Lainnya')===kat);
- const bk=meja?datangBooking(+meja):null,dp=bk?Math.min(bk.dp,total):0,due=total-dp,info=infoMeja();
+ const bk=meja?datangBooking(+meja):null,dp=bk?Math.min(bk.dp,total):0,due=total-dp;
  const jml=isi.reduce((a,i)=>a+i.n,0);
  el.innerHTML=`<div class="tiga"><aside class="kat">${['Semua',...kats].map(c=>`<button class="${c===kat?'on':''}" data-kat="${esc(c)}">${esc(c)}</button>`).join('')}</aside><div class="grid">${tampil.map(m=>{const n=k.get(m.menu_id)||0;return `<div class="kartu${n?' ada':''}"><div class="gbr">${m.gambar?`<img src="${esc(m.gambar)}" alt="" loading="lazy">`:`<span>${esc(m.nama_menu.trim().charAt(0).toUpperCase())}</span>`}${m.stok<=5?`<em class="sisa">${m.stok<1?'Habis':'Sisa '+m.stok}</em>`:''}</div><div class="kt"><b>${esc(m.nama_menu)}</b><span class="hg">${rp(m.harga)}</span><small>Stok ${m.stok}</small></div>${n?`<div class="kc"><label>Jumlah <input type="number" inputmode="numeric" min="0" max="${m.stok}" value="${n}" data-c="${m.menu_id}" aria-label="Jumlah pesanan ${esc(m.nama_menu)}"></label></div>`:`<button class="pesan" data-t="${m.menu_id}" ${m.stok<1?'disabled':''}>${m.stok<1?'Habis':'Pesan'}</button>`}</div>`}).join('')||'<p>Belum ada menu di kategori ini.</p>'}</div>
  <div class="nota" id="panel">
- <div class="grid kecil"><button class="mj bawa${meja===''?' pilih':''}" data-m="">Bawa pulang</button>${semua.map(m=>{const t=m.status_okupansi==='TERISI',ib=info.get(m.meja_id),kunci=!t&&ib?.status==='MENUNGGU',tamu=!t&&ib?.status==='DATANG';return `<button class="mj ${t?'terisi':'kosong'}${tamu?' tamu':''}${String(m.meja_id)===String(meja)?' pilih':''}" data-m="${m.meja_id}" ${t||kunci?'disabled':''}>Meja ${m.meja_id}<br><small>${m.kapasitas} kursi</small>${tamu?`<br><small>a.n. ${esc(ib.nama)}${ib.dp?' · DP '+rp(ib.dp):''}</small>`:''}${kunci?'<br><small>Booking segera</small>':''}</button>`}).join('')}</div>
+ <div class="grid kecil"><button class="mj bawa${meja===''?' pilih':''}" data-m="">Bawa pulang</button>${semua.map(m=>{const t=m.status_okupansi==='TERISI',ib=t?null:info.get(m.meja_id),lock=ib&&ib.status==='MENUNGGU',tamu=ib&&ib.status==='DATANG';
+  return `<button class="mj ${t?'terisi':lock?'terkunci':'kosong'}${tamu?' tamu':''}${String(m.meja_id)===String(meja)?' pilih':''}" data-m="${m.meja_id}" ${t||lock?'disabled':''}>Meja ${m.meja_id}<br><small>${m.kapasitas} kursi</small>${lock?`<br><small>Booking ${ib.jam} · ${esc(ib.nama)}</small>`:''}${tamu?`<br><small>a.n. ${esc(ib.nama)}${ib.dp?' · DP '+rp(ib.dp):''}</small>`:''}</button>`}).join('')}</div>
  ${isi.map(i=>`<div class="baris"><span>${esc(i.nama_menu)}<br><small>${rp(i.harga)}</small></span><span style="display:flex;gap:4px;align-items:center"><button data-k="${i.menu_id}" aria-label="Kurangi">−</button><input type="number" inputmode="numeric" min="0" max="${i.stok}" value="${i.n}" data-q="${i.menu_id}" aria-label="Jumlah ${esc(i.nama_menu)}" style="width:56px;text-align:center"><button data-p="${i.menu_id}" aria-label="Tambah" ${i.n>=i.stok?'disabled':''}>+</button></span></div>`).join('')||'<p>Ketuk menu untuk mulai pesanan.</p>'}
  <h2>${rp(total)}</h2>${dp>0?`<div class="baris"><span>DP booking a.n. ${esc(bk.nama)}</span><b>−${rp(dp)}</b></div><div class="baris"><span>Sisa bayar</span><b>${rp(due)}</b></div>`:''}
  <select id="metode"><option>Tunai</option><option>QRIS</option><option>Debit</option></select>
@@ -46,7 +48,7 @@ export default function view(el){
  el.querySelectorAll('[data-kat]').forEach(b=>b.onclick=()=>{kat=b.dataset.kat;view(el)});
  if($('#bar'))$('#bar').onclick=()=>$('#panel').scrollIntoView({behavior:'smooth'});
  $('#metode').onchange=e=>{metode=e.target.value;view(el)};
- el.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{if(b.disabled)return;meja=b.dataset.m;view(el)});
+ el.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{meja=b.dataset.m;view(el)});
  el.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{const id=+b.dataset.t;fokus=id;ubah(id,(k.get(id)||0)+1)});
  el.querySelectorAll('[data-c]').forEach(inp=>inp.onchange=()=>{
   const id=+inp.dataset.c;let n=Math.floor(+inp.value);
