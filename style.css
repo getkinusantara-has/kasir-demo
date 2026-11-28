@@ -255,3 +255,27 @@ body:not(.kasir):not(.awal) .owner-wrap{max-width:1120px;margin:22px auto 50px;d
 .owner-keterangan{display:block;margin-top:12px}
 @media(max-width:800px){body:not(.kasir):not(.awal) .owner-wrap{grid-template-columns:1fr;gap:14px;margin:12px auto 30px}.owner-nav{position:static;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;padding:6px}.owner-nav button{justify-content:center;gap:7px;padding:10px 7px;font-size:.82rem}.owner-nav button span{width:24px;height:24px}}
 @media(max-width:560px){.owner-metrik{grid-template-columns:1fr 1fr}.owner-metrik-kartu:last-child{grid-column:1/-1}.owner-subgrid{grid-template-columns:1fr}.owner-grafik{gap:5px;height:190px}.owner-batang-latar{height:115px}.owner-kolom strong{font-size:.58rem}.owner-kolom small{font-size:.64rem}.owner-panel{padding:14px}.owner-kepala{margin-bottom:14px}}
+
+/* Dashboard Manajemen */
+.manajemen-wrap .owner-nav{grid-template-columns:1fr}
+.manajemen-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px}
+.manajemen-desc{margin:0 0 14px;color:#68776e;font-size:.85rem;line-height:1.5}
+.manajemen-form{display:grid;gap:11px}
+.manajemen-form label{display:grid;gap:6px;color:#52645a;font-size:.82rem;font-weight:700}
+.manajemen-form input,.manajemen-form select{width:100%;min-width:0;padding:11px 12px;border:1px solid #d5dfd8;border-radius:9px;background:#fff;color:#26382d;font:inherit;font-weight:400}
+.manajemen-form button{justify-self:start}
+.manajemen-tabel-wrap{width:100%;overflow-x:auto;margin-top:14px}
+.manajemen-tabel{width:100%;border-collapse:collapse;text-align:left;font-size:.82rem;white-space:nowrap}
+.manajemen-tabel th,.manajemen-tabel td{padding:11px 12px;border-bottom:1px solid #e7ede8;vertical-align:middle}
+.manajemen-tabel th{background:#f6f9f6;color:#637168;font-size:.72rem;letter-spacing:.035em}
+.manajemen-tabel td{color:#42564a}
+.manajemen-tabel td b{color:#1f4d3a}
+.manajemen-status{display:inline-block;padding:5px 8px;border-radius:99px;font-size:.7rem;font-weight:750}
+.manajemen-status.aman{background:#edf4ef;color:#2e6848}
+.manajemen-status.rendah{background:#fff3e5;color:#946018}
+.manajemen-waktu{display:block;margin-top:4px;color:#7a877f;font-size:.7rem}
+.manajemen-riwayat{margin-top:12px}
+.manajemen-kosong{display:flex;flex-direction:column;gap:6px;justify-content:center;min-height:145px;margin-top:12px;padding:16px;border:1px dashed #d6dfd8;border-radius:10px;background:#fafcfa;color:#748078;font-size:.82rem;line-height:1.55}
+.manajemen-kosong b{color:#40574a;font-size:.9rem}
+@media(max-width:800px){.manajemen-wrap .owner-nav{grid-template-columns:repeat(3,minmax(0,1fr))}.manajemen-wrap .owner-nav button{font-size:.78rem}}
+@media(max-width:560px){.manajemen-form-grid{grid-template-columns:1fr}.manajemen-wrap .owner-nav button{flex-direction:column;gap:4px;padding:8px 4px;font-size:.7rem}.manajemen-tabel{font-size:.76rem}.manajemen-tabel th,.manajemen-tabel td{padding:9px 10px}}

@@ -75,7 +75,12 @@ async function masuk(p){
   catch(e){$('main').innerHTML=`<section class="peran"><div class="nota"><b>Gagal membuka Owner</b><small>${esc(e.message)}</small></div></section>`;}
   return;
  }
- $('main').innerHTML=`<section class="peran"><div class="nota"><b>Informasi</b><small>Dashboard Manajemen akan disiapkan pada tahap berikutnya.</small></div></section>`;
+ if(p==='manajemen'){
+  try{const m=await import('./views/manajemen.js');m.default($('main'));}
+  catch(e){$('main').innerHTML=`<section class="peran"><div class="nota"><b>Gagal membuka Manajemen</b><small>${esc(e.message)}</small></div></section>`;}
+  return;
+ }
+ $('main').innerHTML=`<section class="peran"><div class="nota"><b>Informasi</b><small>Peran belum tersedia.</small></div></section>`;
 }
 $('#menu-toggle').addEventListener('click',toggleMenu);
 document.querySelectorAll('[data-peran]').forEach(b=>b.addEventListener('click',()=>masuk(b.dataset.peran)));
