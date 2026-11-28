@@ -1,0 +1,10 @@
+DEPLOY GITHUB PAGES
+
+1. Extract this ZIP on your computer.
+2. Upload the CONTENTS of the extracted folder to the ROOT of the repository (not a nested kasir-demo-main folder).
+3. Keep the js and icons folders intact, including their subfolders.
+4. In GitHub Settings > Pages, choose Deploy from a branch, branch main, folder /(root).
+5. Wait for deployment to finish before opening the site.
+
+The package preserves the existing UI changes and application modules. The booking logic module has been restored as js/booking.js, and the service worker cache version is kasir-v19.
+Do not clear browser site data/IndexedDB unless you have exported a database backup.
