@@ -1,5 +1,6 @@
 import {q,run,tx} from './db.js';
-import {esc,rp} from './app.js';
+const esc=s=>String(s??'').replace(/[&<>\"]/g,c=>`&#${c.charCodeAt(0)};`);
+const rp=n=>'Rp'+Number(n||0).toLocaleString('id-ID');
 
 const KEY='kasir_v26_device_id';
 const deviceId=()=>{let id=localStorage.getItem(KEY);if(!id){id='DEV-'+(crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random().toString(16).slice(2));localStorage.setItem(KEY,id)}return id};
