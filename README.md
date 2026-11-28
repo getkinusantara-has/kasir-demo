@@ -12,7 +12,7 @@ V26 dibangun dari proyek V25. Aplikasi tetap memakai database lokal SQLite (sql.
 - Impor master Owner di halaman Menu (Kasir) dan halaman Management. Harga/kategori/status menu mengikuti Owner; stok lokal tidak ditimpa.
 - Ekspor tabel CSV agar dapat dibuka dan diedit dengan Microsoft Excel atau aplikasi spreadsheet lain.
 - Riwayat impor lokal pada perangkat Owner.
-- Service worker cache version dinaikkan ke kasir-v26-t0.
+- Service worker cache version dinaikkan ke kasir-v26-t1.
 
 ## Alur kerja manual
 
@@ -52,3 +52,9 @@ Jangan menghapus data browser sebelum membuat backup `.sqlite` dari halaman Lapo
 - PIN disimpan sebagai hash PBKDF2 + garam. File Excel pengguna berisi hash tersebut: perlakukan sebagai rahasia.
 - `js/xlsx-kit.js` adalah kerangka impor/ekspor Excel bersama (sheet `_info` sebagai penanda format, jenis, versi). Dipakai modul-modul berikutnya.
 - PIN void di Kasir (tabel `pengaturan`) masih terpisah dan akan disatukan pada tahap berikutnya.
+
+### Pembaruan t1 — semua pertukaran data memakai Excel (.xlsx)
+- Ekspor/impor master Owner (menu, meja) dan transaksi harian Kasir sekarang Excel; JSON/CSV tidak lagi dipakai untuk ekspor.
+- Satu file per jenis: `master-owner-TANGGAL.xlsx` (sheet menu, meja), `transaksi-kasir-TANGGAL.xlsx` (sheet transaksi, detail_transaksi), `pengguna-TANGGAL.xlsx`. Jangan ubah nama sheet, judul kolom, atau kolom ID.
+- Gambar menu tidak ikut diekspor (batas ukuran sel Excel); gambar tetap tersimpan di tiap perangkat.
+- File yang salah jenis ditolak dengan pesan yang jelas.
