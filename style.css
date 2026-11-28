@@ -130,3 +130,17 @@ header #jam{
   font-weight:700;
  }
 }
+
+
+/* Kartu panduan peran */
+.panduan{max-width:980px;margin:22px auto 24px;padding:22px;background:#fff;border:1px solid #dce6df;border-radius:16px;box-shadow:0 3px 14px rgba(23,36,29,.06)}
+.panduan-kepala{text-align:left;margin-bottom:18px}
+.panduan-label{display:inline-block;margin-bottom:7px;color:#2e7d4f;font-size:.7rem;font-weight:800;letter-spacing:.12em}
+.panduan-kepala h2{margin:0 0 6px;color:#1f4d3a;font-size:clamp(1.35rem,3vw,1.8rem)}
+.panduan-kepala p{margin:0;color:#64736a;font-size:.94rem}
+.panduan-daftar{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.panduan-item{padding:14px 15px;background:#f5f8f5;border:1px solid #e2ebe4;border-left:3px solid #2e7d4f;border-radius:10px}
+.panduan-item b{display:block;margin-bottom:5px;color:#1f4d3a;font-size:.98rem}
+.panduan-item p{margin:0;color:#53645a;font-size:.9rem;line-height:1.5}
+.peran .panduan{margin:0 auto 18px}
+@media(max-width:700px){.panduan{margin:12px 0 18px;padding:16px;border-radius:12px}.panduan-daftar{grid-template-columns:1fr;gap:8px}.panduan-item{padding:12px 13px}}

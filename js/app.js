@@ -15,11 +15,37 @@ const hr=()=>{
 hr();setInterval(hr,1000);
 let peran=null;
 
+const panduan={
+ kasir:[
+  ['Kasir','Melayani transaksi penjualan, pembayaran, dan pencetakan struk.'],
+  ['Meja','Mengelola ketersediaan meja, status penggunaan, dan perpindahan pelanggan.'],
+  ['Booking','Mengelola reservasi pelanggan, jadwal kedatangan, dan konfirmasi booking.'],
+  ['Menu','Mengatur daftar produk, kategori, harga, dan ketersediaan menu.'],
+  ['Laporan','Melihat rekap transaksi, penjualan harian, dan menu terjual.']
+ ],
+ manajemen:[
+  ['Inventori','Melakukan stock opname dan mencatat penerimaan barang.'],
+  ['Staf','Mengatur jadwal kerja dan memantau absensi karyawan.'],
+  ['Kasir','Memvalidasi pembatalan transaksi dan pemberian diskon khusus.']
+ ],
+ owner:[
+  ['Strategi','Menganalisis laba rugi dan performa setiap cabang.'],
+  ['Manajemen','Mengelola master data dan memberikan persetujuan pembelian.']
+ ]
+};
+function kartuPanduan(p){
+ const daftar=panduan[p]||[];
+ return `<section class="panduan" aria-label="Panduan penggunaan">
+  <div class="panduan-kepala"><span class="panduan-label">PANDUAN PENGGUNAAN</span><h2>Selamat datang</h2><p>Berikut fungsi menu yang tersedia untuk peran ${p==='kasir'?'Kasir':p==='owner'?'Owner':'Manajemen'}.</p></div>
+  <div class="panduan-daftar">${daftar.map(([judul,isi])=>`<article class="panduan-item"><b>${judul}</b><p>${isi}</p></article>`).join('')}</div>
+ </section>`;
+}
 async function buka(){
  const n=['kasir','meja','booking','menu','laporan'].find(x=>'#'+x===location.hash)||'kasir';
  document.querySelectorAll('nav a').forEach(a=>a.classList.toggle('on',a.hash==='#'+n));
- const m=await import(`./views/${n}.js`),el=document.createElement('div');
- $('main').replaceChildren(el);m.default(el);
+ const m=await import(`./views/${n}.js`),host=document.createElement('div'),el=document.createElement('div');
+ if(n==='kasir')host.innerHTML=kartuPanduan('kasir');
+ host.append(el);$('main').replaceChildren(host);m.default(el);
 }
 function tutupMenu(){
  const panel=$('#menu-peran-panel'),toggle=$('#menu-toggle');
@@ -41,7 +67,7 @@ function masuk(p){
  }
  peran=p;setMode(p);
  history.replaceState(null,'',location.pathname+location.search);
- $('main').innerHTML=`<section class="peran"><h1>${p==='owner'?'Owner':'Manajemen'}</h1><div class="nota"><b>Dalam pembuatan</b><small>Halaman ini belum tersedia.</small></div></section>`;
+ $('main').innerHTML=`<section class="peran">${kartuPanduan(p)}<div class="nota"><b>Informasi</b><small>Fitur khusus ${p==='owner'?'Owner':'Manajemen'} akan tersedia pada pengembangan berikutnya.</small></div></section>`;
 }
 $('#menu-toggle').addEventListener('click',toggleMenu);
 document.querySelectorAll('[data-peran]').forEach(b=>b.addEventListener('click',()=>masuk(b.dataset.peran)));
