@@ -144,3 +144,12 @@ header #jam{
 .panduan-item p{margin:0;color:#53645a;font-size:.9rem;line-height:1.5}
 .peran .panduan{margin:0 auto 18px}
 @media(max-width:700px){.panduan{margin:12px 0 18px;padding:16px;border-radius:12px}.panduan-daftar{grid-template-columns:1fr;gap:8px}.panduan-item{padding:12px 13px}}
+
+/* Panduan umum ditampilkan di halaman awal sebelum pemilihan peran */
+.panduan-awal{max-width:980px;margin:clamp(28px,7vh,72px) auto 0}
+.panduan-awal .panduan-daftar{grid-template-columns:repeat(3,minmax(0,1fr))}
+.panduan-info{margin-top:16px;padding:12px 14px;background:#f5f8f5;border:1px solid #e2ebe4;border-radius:10px}
+.panduan-info b{display:block;color:#1f4d3a;margin-bottom:4px}
+.panduan-info p{margin:0;color:#64736a;font-size:.88rem;line-height:1.45}
+.landing-pilih{margin:12px auto 32px;padding:8px 16px}
+@media(max-width:700px){.panduan-awal{margin:18px 0 0;padding:16px}.panduan-awal .panduan-daftar{grid-template-columns:1fr}.landing-pilih{margin:8px auto 24px;padding:8px 12px}}
