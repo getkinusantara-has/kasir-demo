@@ -12,7 +12,7 @@ V26 dibangun dari proyek V25. Aplikasi tetap memakai database lokal SQLite (sql.
 - Impor master Owner di halaman Menu (Kasir) dan halaman Management. Harga/kategori/status menu mengikuti Owner; stok lokal tidak ditimpa.
 - Ekspor tabel CSV agar dapat dibuka dan diedit dengan Microsoft Excel atau aplikasi spreadsheet lain.
 - Riwayat impor lokal pada perangkat Owner.
-- Service worker cache version dinaikkan ke kasir-v26.
+- Service worker cache version dinaikkan ke kasir-v26-fix2.
 
 ## Alur kerja manual
 

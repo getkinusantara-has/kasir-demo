@@ -36,7 +36,7 @@ export default function view(el){
  const $=s=>el.querySelector(s),pindah=t=>{if(t){tgl=t;view(el)}};
  // --- Cek ketersediaan ---
  const isiCek=()=>{const r=ketersediaan(cek.tgl,cek.jam,cek.durasi),H=$('#cekhasil');
-  H.innerHTML=r.length?r.map(m=>`<button type="button" class="mj ${m.st==='TERSEDIA'?'kosong':m.st==='DIBOOKING'?'jb':'terisi'}" data-p="${m.meja_id}" ${m.st==='TERSEDIA'?'':'disabled'}>Meja ${m.meja_id}<br><small>${m.kapasitas} kursi</small><br><b>${m.st}</b>${m.st==='DIBOOKING'?`<br><small>${m.jam}-${m.selesai} · ${esc(m.nama)}</small>`:''}</button>`).join(''):'<small>Isi tanggal dan jam dulu.</small>';
+  H.innerHTML=r.length?r.map(m=>`<button type="button" class="mj ${m.status==='TERSEDIA'?'kosong':m.status==='DIBOOKING'?'jb':'terisi'}" data-p="${m.meja_id}" ${m.status==='TERSEDIA'?'':'disabled'}>Meja ${m.meja_id}<br><small>${m.kapasitas} kursi</small><br><b>${m.status}</b>${m.status==='DIBOOKING'?`<br><small>${m.jam}-${m.selesai} · ${esc(m.nama)}</small>`:''}</button>`).join(''):'<small>Isi tanggal dan jam dulu.</small>';
   H.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{const x=$('#fb').elements;
    x.meja.value=b.dataset.p;x.tgl.value=cek.tgl;x.jam.value=cek.jam;
    x.durasi.value=Math.min(Math.max(Math.floor(+cek.durasi)||TAHAN_DEF,TAHAN_MIN),TAHAN_MAKS);

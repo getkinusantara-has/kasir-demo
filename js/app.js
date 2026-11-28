@@ -90,7 +90,7 @@ document.addEventListener('click',e=>{
 document.addEventListener('keydown',e=>{if(e.key==='Escape')tutupMenu()});
 addEventListener('hashchange',()=>{if(peran==='kasir')coba(buka)});
 
-navigator.locks.request('kasir',{ifAvailable:true},async l=>{
+(navigator.locks?(f=>navigator.locks.request('kasir',{ifAvailable:true},f)):(f=>f(true)))(async l=>{
  const sp=$('#splash');
  if(!l){sp?.classList.add('off');$('main').textContent='Kasir sudah terbuka di tab lain. Tutup tab ini.';return}
  try{
