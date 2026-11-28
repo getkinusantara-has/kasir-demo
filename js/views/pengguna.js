@@ -1,0 +1,22 @@
+// Owner → Pengguna: kelola akun dan PIN, bagikan daftar pengguna lewat Excel.
+import {coba,esc} from '../app.js';
+import {JABATAN,semuaPengguna,tambahPengguna,ubahPin,setAktif,eksporPenggunaExcel,bacaPenggunaExcel,terapkanPengguna} from '../auth.js';
+export default function view(el){
+ const data=semuaPengguna(),aktif=data.filter(u=>u.aktif);
+ el.innerHTML=`<div class="owner-kepala"><div><span class="owner-eyebrow">OWNER / PENGGUNA</span><h1>Pengguna &amp; PIN</h1><p>Kelola akun per orang. Manajemen dan Owner wajib memasukkan PIN; Kasir saat ini tetap terbuka.</p></div><span class="owner-tag">${aktif.length} aktif</span></div>
+ <section class="owner-panel"><h2>Daftar pengguna</h2><div class="manajemen-tabel-wrap"><table class="manajemen-tabel"><thead><tr><th>Nama</th><th>Jabatan</th><th>Status</th><th>Aksi</th></tr></thead><tbody>${data.map(u=>`<tr><td><b>${esc(u.nama)}</b></td><td>${esc(u.jabatan)}</td><td><span class="manajemen-status ${u.aktif?'aman':'rendah'}">${u.aktif?'Aktif':'Nonaktif'}</span></td><td><button type="button" data-aktif="${u.pengguna_id}" data-ke="${u.aktif?0:1}">${u.aktif?'Nonaktifkan':'Aktifkan'}</button></td></tr>`).join('')||'<tr><td colspan="4">Belum ada pengguna.</td></tr>'}</tbody></table></div></section>
+ <div class="manajemen-form-grid">
+ <section class="owner-panel"><h2>Tambah pengguna</h2><form id="pg-tambah" class="manajemen-form"><label>Nama<input name="nama" maxlength="60" required autocomplete="off"></label><label>Jabatan<select name="jabatan">${JABATAN.map(j=>`<option>${j}</option>`).join('')}</select></label><label>PIN (6 digit)<input name="pin" type="password" inputmode="numeric" maxlength="6" pattern="[0-9]{6}" required autocomplete="new-password"></label><label>Ulangi PIN<input name="pin2" type="password" inputmode="numeric" maxlength="6" pattern="[0-9]{6}" required autocomplete="new-password"></label><button class="utama">Tambah pengguna</button></form></section>
+ <section class="owner-panel"><h2>Atur ulang PIN</h2><form id="pg-reset" class="manajemen-form"><label>Pengguna<select name="id">${data.map(u=>`<option value="${u.pengguna_id}">${esc(u.nama)} (${esc(u.jabatan)})</option>`).join('')}</select></label><label>PIN baru (6 digit)<input name="pin" type="password" inputmode="numeric" maxlength="6" pattern="[0-9]{6}" required autocomplete="new-password"></label><label>Ulangi PIN baru<input name="pin2" type="password" inputmode="numeric" maxlength="6" pattern="[0-9]{6}" required autocomplete="new-password"></label><button class="utama" ${data.length?'':'disabled'}>Simpan PIN baru</button></form></section></div>
+ <section class="owner-panel"><h2>Bagikan ke perangkat lain</h2><p>Ekspor daftar pengguna ke Excel, lalu impor di perangkat Manajemen dan Kasir lewat layar kunci. Impor <b>menggantikan seluruh</b> daftar pengguna di perangkat tujuan.</p><div class="dc-actions"><button type="button" class="utama" id="pg-ekspor">Ekspor daftar pengguna · Excel</button><label class="dc-file">Impor daftar pengguna (mengganti daftar di perangkat ini)<input id="pg-impor" type="file" accept=".xlsx"></label></div></section>
+ <div class="owner-catatan"><b>Keamanan</b><p>File Excel pengguna berisi hash PIN, bukan PIN-nya, tetapi PIN 6 digit tetap bisa ditebak bila file bocor. Kirim file hanya ke perangkat yang berhak, jangan ke grup umum, dan jangan mengedit kolom pin_hash atau salt. Akun Owner terakhir yang aktif tidak bisa dinonaktifkan.</p></div>`;
+ const $=s=>el.querySelector(s);
+ el.querySelectorAll('[data-aktif]').forEach(b=>b.onclick=()=>coba(async()=>{await setAktif(+b.dataset.aktif,+b.dataset.ke);view(el)}));
+ $('#pg-tambah').onsubmit=e=>{e.preventDefault();const f=e.currentTarget;coba(async()=>{await tambahPengguna(f.nama.value,f.jabatan.value,f.pin.value,f.pin2.value);view(el)})};
+ $('#pg-reset').onsubmit=e=>{e.preventDefault();const f=e.currentTarget;coba(async()=>{await ubahPin(+f.id.value,f.pin.value,f.pin2.value);alert('PIN diperbarui.');f.reset()})};
+ $('#pg-ekspor').onclick=()=>coba(eksporPenggunaExcel);
+ $('#pg-impor').onchange=async ev=>{const input=ev.target,berkas=input.files[0];input.value='';if(!berkas)return;
+  coba(async()=>{const hasil=await bacaPenggunaExcel(berkas);
+   if(!confirm(`Daftar pengguna di perangkat ini akan DIGANTI dengan isi file (${hasil.length} akun). Akun Anda saat ini bisa ikut berubah. Lanjutkan?`))return;
+   await terapkanPengguna(hasil);alert(`Daftar pengguna diperbarui (${hasil.length} akun).`);view(el)})};
+}

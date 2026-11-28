@@ -12,7 +12,7 @@ V26 dibangun dari proyek V25. Aplikasi tetap memakai database lokal SQLite (sql.
 - Impor master Owner di halaman Menu (Kasir) dan halaman Management. Harga/kategori/status menu mengikuti Owner; stok lokal tidak ditimpa.
 - Ekspor tabel CSV agar dapat dibuka dan diedit dengan Microsoft Excel atau aplikasi spreadsheet lain.
 - Riwayat impor lokal pada perangkat Owner.
-- Service worker cache version dinaikkan ke kasir-v26-fix2.
+- Service worker cache version dinaikkan ke kasir-v26-t0.
 
 ## Alur kerja manual
 
@@ -42,3 +42,13 @@ Jalankan server statis, misalnya `python -m http.server`, lalu buka `http://loca
 ## Catatan migrasi
 
 Jangan menghapus data browser sebelum membuat backup `.sqlite` dari halaman Laporan. Database V25 tetap dipakai dan tabel `v26_import_log` dibuat secara aditif saat Pusat Data digunakan.
+
+## Tahap 0 — PIN per orang dan kerangka Excel
+
+- Manajemen dan Owner wajib PIN 6 digit per orang; Kasir sementara tetap terbuka. Akun Owner bisa membuka halaman Manajemen.
+- Owner membuat akun di **Owner → Pengguna**, lalu mengekspornya ke Excel. Perangkat Manajemen/Kasir mengimpor lewat tombol "Impor daftar pengguna" di layar kunci (impor menggantikan seluruh daftar di perangkat itu).
+- Perangkat Owner yang masih kosong meminta pembuatan akun Owner pertama dan menampilkan **kode pemulihan** satu kali. Catat kode itu: dipakai lewat "Lupa PIN Owner".
+- Salah PIN 5 kali: ditahan 30 detik. Layar terkunci kembali saat pindah peran, tombol KUNCI, atau 10 menit tanpa aktivitas.
+- PIN disimpan sebagai hash PBKDF2 + garam. File Excel pengguna berisi hash tersebut: perlakukan sebagai rahasia.
+- `js/xlsx-kit.js` adalah kerangka impor/ekspor Excel bersama (sheet `_info` sebagai penanda format, jenis, versi). Dipakai modul-modul berikutnya.
+- PIN void di Kasir (tabel `pengaturan`) masih terpisah dan akan disatukan pada tahap berikutnya.

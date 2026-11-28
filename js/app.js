@@ -1,4 +1,5 @@
 import {init} from './db.js';
+import {mintaAkses} from './lock.js';
 export const rp=n=>'Rp'+Number(n).toLocaleString('id-ID');
 export const esc=s=>String(s??'').replace(/[&<>"]/g,c=>`&#${c.charCodeAt(0)};`);
 export const coba=async fn=>{try{await fn()}catch(e){alert(e.message)}};
@@ -15,7 +16,11 @@ const hr=()=>{
  e.textContent=d.toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'short',year:'numeric'})+' · '+d.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});
 };
 hr();setInterval(hr,1000);
-let peran=null;
+let peran=null,sesi=null,aktifTerakhir=Date.now();
+export const sesiSaatIni=()=>sesi;
+const tampilSesi=()=>{const e=$('#menu-sesi');if(e)e.textContent=sesi?`Masuk: ${sesi.nama} (${sesi.jabatan})`:''};
+['pointerdown','keydown','touchstart'].forEach(ev=>addEventListener(ev,()=>{aktifTerakhir=Date.now()},{passive:true}));
+setInterval(()=>{if(sesi&&Date.now()-aktifTerakhir>10*60*1000)pilihPeran()},15000);
 
 const panduan={
  kasir:[
@@ -61,13 +66,19 @@ function toggleMenu(){
  panel.hidden=!panel.hidden;toggle.setAttribute('aria-expanded',String(!panel.hidden));
 }
 function pilihPeran(){
- peran=null;setMode(null);tutupMenu();
+ peran=null;sesi=null;tampilSesi();setMode(null);tutupMenu();
  history.replaceState(null,'',location.pathname+location.search);
  $('main').innerHTML=kartuPanduanAwal()+'<section class="landing landing-pilih"><p>Pilih peran melalui menu untuk mulai menggunakan aplikasi.</p></section>';
 }
 async function masuk(p){
  tutupMenu();
- peran=p;setMode(p);
+ if(p!=='kasir'){
+  let u;try{u=await mintaAkses(p)}catch(e){alert(e.message);return}
+  if(!u)return;
+  sesi=u;
+ }else sesi=null;
+ aktifTerakhir=Date.now();
+ peran=p;setMode(p);tampilSesi();
  if(p==='kasir'){history.replaceState(null,'','#kasir');coba(buka);return;}
  history.replaceState(null,'',location.pathname+location.search);
  if(p==='owner'){
@@ -83,6 +94,7 @@ async function masuk(p){
  $('main').innerHTML=`<section class="peran"><div class="nota"><b>Informasi</b><small>Peran belum tersedia.</small></div></section>`;
 }
 $('#menu-toggle').addEventListener('click',toggleMenu);
+$('#menu-kunci').addEventListener('click',pilihPeran);
 document.querySelectorAll('[data-peran]').forEach(b=>b.addEventListener('click',()=>masuk(b.dataset.peran)));
 document.addEventListener('click',e=>{
  if(!e.target.closest('.menu-peran'))tutupMenu();

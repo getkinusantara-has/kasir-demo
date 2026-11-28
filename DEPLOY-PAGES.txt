@@ -3,4 +3,4 @@ V26 — deploy static files to GitHub Pages.
 2. Push to the main branch.
 3. Enable Settings > Pages > Deploy from a branch > main / root.
 4. Open the Pages URL. Initial dependency caching requires internet access.
-5. After deploying, close/reopen the PWA so the kasir-v26-fix2 service worker cache is installed.
+5. After deploying, close/reopen the PWA so the kasir-v26-t0 service worker cache is installed.
