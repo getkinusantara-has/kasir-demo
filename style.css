@@ -90,21 +90,22 @@ body.awal header nav{display:none}
  body.kasir header nav{gap:0}
  body.kasir header nav a{padding:10px 11px}
 }
+
+/* Navigasi Kasir turun ke bawah jam pada layar HP */
 @media(max-width:700px){
- header{min-height:58px;padding:6px 10px;gap:8px}
- header nav{position:fixed;bottom:0;left:0;right:0;z-index:6;display:none!important;background:#fff;border-top:1px solid #c9d6ce;gap:0;padding-bottom:env(safe-area-inset-bottom)}
+ header{min-height:58px;padding:6px 10px;gap:8px;flex-wrap:wrap}
+ header nav{position:static;order:3;width:100%;display:none!important;background:#fff;border-top:1px solid #c9d6ce;gap:0;justify-content:space-between}
  body.kasir header nav{display:flex!important}
- header nav a{flex:1;text-align:center;border-radius:0;padding:13px 3px;font-size:.82rem}
- header #jam{font-size:.72rem;white-space:normal;line-height:1.25;max-width:130px}
+ header nav a{flex:1;min-width:0;text-align:center;border-radius:0;padding:10px 3px;font-size:.82rem;white-space:nowrap}
+ header #jam{font-size:.72rem;white-space:normal;line-height:1.25;max-width:48%}
  .brand img{height:29px}
  .brand span{font-size:.58rem}
- main{padding:12px 12px 100px}
+ main{padding:12px 12px 24px}
  .landing{margin:clamp(70px,16vh,130px) auto 0;padding:28px 12px}
  .peran{margin:24px auto;padding:12px}
  .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 @media print{.menu-peran{display:none}}
-
 
 /* Posisi jam di tengah header */
 header{position:sticky}
@@ -130,7 +131,6 @@ header #jam{
   font-weight:700;
  }
 }
-
 
 /* Kartu panduan peran */
 .panduan{max-width:980px;margin:22px auto 24px;padding:22px;background:#fff;border:1px solid #dce6df;border-radius:16px;box-shadow:0 3px 14px rgba(23,36,29,.06)}
