@@ -1,3 +1,4 @@
+import {panelImporMaster} from '../data-center.js';
 import {q,run,tx} from '../db.js';import {rp,esc,coba} from '../app.js';
 import {unduhMenu,bacaFile,terapkan} from '../excel.js';
 let rencana=null,katF='Semua',cariM='';
@@ -38,4 +39,4 @@ export default function view(el,e={}){
  if(e.menu_id){x.n.value=e.nama_menu;x.h.value=e.harga;x.k.value=e.kategori||'';x.s.value=e.stok;x.a.checked=!!e.status_aktif}
  f.onsubmit=v=>{v.preventDefault();const p=[x.n.value,Math.round(+x.h.value),x.k.value.trim(),Math.floor(+x.s.value),+x.a.checked,gambar||null];
   coba(async()=>{await tx(()=>e.menu_id?run('UPDATE menu SET nama_menu=?,harga=?,kategori=?,stok=?,status_aktif=?,gambar=? WHERE menu_id=?',[...p,e.menu_id]):run('INSERT INTO menu(nama_menu,harga,kategori,stok,status_aktif,gambar)VALUES(?,?,?,?,?,?)',p));view(el)})};
- isiDaftar()}
+ isiDaftar();panelImporMaster(el)}

@@ -1,5 +1,6 @@
 import {q} from '../db.js';
 import {rp,esc} from '../app.js';
+import dataCenter from '../data-center.js';
 
 let bagian='strategi';
 
@@ -55,10 +56,12 @@ export default function view(el){
    <div class="owner-nav" role="tablist" aria-label="Menu Owner">
     <button type="button" role="tab" aria-selected="${bagian==='strategi'}" class="${bagian==='strategi'?'on':''}" data-bagian="strategi"><span>01</span>Strategi Bisnis</button>
     <button type="button" role="tab" aria-selected="${bagian==='pengelolaan'}" class="${bagian==='pengelolaan'?'on':''}" data-bagian="pengelolaan"><span>02</span>Pengelolaan Usaha</button>
+   <button type="button" role="tab" aria-selected="${bagian==='pusatdata'}" class="${bagian==='pusatdata'?'on':''}" data-bagian="pusatdata"><span>03</span>Pusat Data</button>
    </div>
-   <div class="owner-konten">${bagian==='strategi'?strategi():pengelolaan()}</div>
+   <div class="owner-konten" id="owner-konten">${bagian==='strategi'?strategi():bagian==='pengelolaan'?pengelolaan():''}</div>
   </section>`;
   el.querySelectorAll('[data-bagian]').forEach(b=>b.onclick=()=>{bagian=b.dataset.bagian;render()});
+  if(bagian==='pusatdata')dataCenter(el.querySelector('#owner-konten'));
  };
  render();
 }

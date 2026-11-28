@@ -1,10 +1,6 @@
-DEPLOY GITHUB PAGES
-
-1. Extract this ZIP on your computer.
-2. Upload the CONTENTS of the extracted folder to the ROOT of the repository (not a nested kasir-demo-main folder).
-3. Keep the js and icons folders intact, including their subfolders.
-4. In GitHub Settings > Pages, choose Deploy from a branch, branch main, folder /(root).
-5. Wait for deployment to finish before opening the site.
-
-The package preserves the existing UI changes and application modules. The booking logic module has been restored as js/booking.js, and the service worker cache version is kasir-v25.
-Do not clear browser site data/IndexedDB unless you have exported a database backup.
+V26 — deploy static files to GitHub Pages.
+1. Extract this folder as the repository root.
+2. Push to the main branch.
+3. Enable Settings > Pages > Deploy from a branch > main / root.
+4. Open the Pages URL. Initial dependency caching requires internet access.
+5. After deploying, close/reopen the PWA so the kasir-v26 service worker cache is installed.

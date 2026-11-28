@@ -1,3 +1,4 @@
+import {panelImporMaster} from '../data-center.js';
 import {q,run,tx} from '../db.js';
 import {rp,esc,coba} from '../app.js';
 
@@ -51,6 +52,7 @@ export default function view(el){
    <button type="button" role="tab" aria-selected="${bagian==='pengawasan'}" class="${bagian==='pengawasan'?'on':''}" data-bagian="pengawasan"><span>03</span>Pengawasan Kasir</button>
   </div><div class="owner-konten">${isi}</div></section>`;
   el.querySelectorAll('[data-bagian]').forEach(b=>b.onclick=()=>{bagian=b.dataset.bagian;render()});
+  panelImporMaster(el.querySelector('.owner-konten'));
   const opname=el.querySelector('#opname');if(opname)opname.onsubmit=e=>{e.preventDefault();const f=e.currentTarget,menu=q('SELECT * FROM menu WHERE menu_id=?',[+f.menu.value])[0],baru=Math.floor(+f.jumlah.value);if(!menu||!Number.isSafeInteger(baru)||baru<0)return alert('Jumlah stok tidak valid.');coba(async()=>{await tx(()=>{run('UPDATE menu SET stok=? WHERE menu_id=?',[baru,menu.menu_id]);run('INSERT INTO inventori_log(menu_id,nama_menu,jenis,jumlah,stok_sebelum,stok_sesudah,catatan) VALUES(?,?,?,?,?,?,?)',[menu.menu_id,menu.nama_menu,'OPNAME',baru-menu.stok,menu.stok,baru,f.catatan.value.trim()])});pesan='Stock opname tersimpan';render();});};
   const terima=el.querySelector('#terima');if(terima)terima.onsubmit=e=>{e.preventDefault();const f=e.currentTarget,menu=q('SELECT * FROM menu WHERE menu_id=?',[+f.menu.value])[0],jumlah=Math.floor(+f.jumlah.value);if(!menu||!Number.isSafeInteger(jumlah)||jumlah<1||menu.stok+jumlah>2147483647)return alert('Jumlah penerimaan tidak valid.');coba(async()=>{await tx(()=>{run('UPDATE menu SET stok=stok+? WHERE menu_id=?',[jumlah,menu.menu_id]);run('INSERT INTO inventori_log(menu_id,nama_menu,jenis,jumlah,stok_sebelum,stok_sesudah,catatan) VALUES(?,?,?,?,?,?,?)',[menu.menu_id,menu.nama_menu,'TERIMA',jumlah,menu.stok,menu.stok+jumlah,f.catatan.value.trim()])});render();});};
  };
