@@ -207,3 +207,51 @@ header #jam{
     transform:translate(-50%,-50%);
   }
 }
+
+/* Dashboard Owner */
+body:not(.kasir):not(.awal) .owner-wrap{max-width:1120px;margin:22px auto 50px;display:grid;grid-template-columns:230px minmax(0,1fr);gap:22px;align-items:start}
+.owner-nav{position:sticky;top:86px;display:grid;gap:8px;padding:10px;background:#fff;border:1px solid #dce6df;border-radius:14px}
+.owner-nav button{display:flex;align-items:center;gap:10px;text-align:left;padding:13px 12px;border:0;border-radius:9px;background:transparent;color:#42564a;font-weight:700}
+.owner-nav button span{display:grid;place-items:center;width:28px;height:28px;border-radius:8px;background:#edf3ee;color:#557362;font-size:.72rem}
+.owner-nav button.on{background:#1f4d3a;color:#fff}
+.owner-nav button.on span{background:rgba(255,255,255,.16);color:#fff}
+.owner-konten{min-width:0}
+.owner-kepala{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;margin:2px 0 20px}
+.owner-eyebrow{color:#2e7d4f;font-size:.7rem;font-weight:800;letter-spacing:.12em}
+.owner-kepala h1{margin:5px 0;color:#1f4d3a;font-size:clamp(1.55rem,3vw,2rem)}
+.owner-kepala p,.owner-panel-kepala p{margin:0;color:#68776e;font-size:.9rem;line-height:1.5}
+.owner-periode,.owner-tag{flex:none;padding:7px 11px;border-radius:99px;background:#edf4ef;color:#2e6848;font-size:.76rem;font-weight:750}
+.owner-metrik{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:14px}
+.owner-metrik-kartu{min-width:0;padding:17px;background:#fff;border:1px solid #dce6df;border-radius:13px;box-shadow:0 2px 8px rgba(23,36,29,.035)}
+.owner-metrik-kartu span,.owner-metrik-kartu small{display:block;color:#68776e;font-size:.8rem}
+.owner-metrik-kartu strong{display:block;margin:9px 0 5px;color:#1f4d3a;font-size:clamp(1.15rem,2.4vw,1.65rem);overflow-wrap:anywhere}
+.owner-metrik-kartu .owner-menu-terlaris{font-size:1.05rem}
+.owner-panel{padding:18px;background:#fff;border:1px solid #dce6df;border-radius:14px;box-shadow:0 2px 8px rgba(23,36,29,.035)}
+.owner-panel-kepala{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.owner-panel h2{margin:0 0 5px;color:#1f4d3a;font-size:1.08rem}
+.owner-grafik{height:210px;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px;align-items:end;margin-top:20px;padding-top:12px;border-bottom:1px solid #e4ebe6}
+.owner-kolom{height:100%;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:7px}
+.owner-kolom strong{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#6b7a72;font-size:.65rem;font-weight:600}
+.owner-batang-latar{width:min(100%,34px);height:135px;display:flex;align-items:flex-end;overflow:hidden;border-radius:7px 7px 2px 2px;background:#f0f4f1}
+.owner-batang-latar i{display:block;width:100%;min-height:0;background:#2e7d4f;border-radius:6px 6px 0 0}
+.owner-kolom small{color:#68776e;font-size:.7rem;white-space:nowrap}
+.owner-catatan{margin-top:13px;padding:13px 15px;background:#f5f8f5;border:1px solid #e2ebe4;border-radius:11px}
+.owner-catatan b{color:#355744;font-size:.86rem}
+.owner-catatan p{margin:5px 0 0;color:#637168;font-size:.82rem;line-height:1.55}
+.owner-subgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.owner-subpanel{min-width:0}
+.owner-icon{display:grid;place-items:center;width:40px;height:40px;margin-bottom:12px;border-radius:11px;background:#edf4ef;color:#2e6848;font-size:1.3rem}
+.owner-subpanel>.owner-tag{display:inline-block;margin-bottom:9px}
+.owner-subpanel h2{font-size:1.12rem}
+.owner-subpanel>p{min-height:44px;margin:0 0 14px;color:#68776e;font-size:.85rem;line-height:1.5}
+.owner-data-list{border-top:1px solid #e7ede8}
+.owner-data-list>div{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid #e7ede8;font-size:.84rem}
+.owner-data-list span{color:#68776e}
+.owner-data-list b{color:#1f4d3a}
+.owner-tag-amber{background:#fff5df;color:#8a6113}
+.owner-kosong{display:flex;flex-direction:column;gap:5px;justify-content:center;min-height:145px;padding:16px;border:1px dashed #d6dfd8;border-radius:10px;background:#fafcfa}
+.owner-kosong b{color:#40574a;font-size:.9rem}
+.owner-kosong span,.owner-keterangan{color:#748078;font-size:.78rem;line-height:1.5}
+.owner-keterangan{display:block;margin-top:12px}
+@media(max-width:800px){body:not(.kasir):not(.awal) .owner-wrap{grid-template-columns:1fr;gap:14px;margin:12px auto 30px}.owner-nav{position:static;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;padding:6px}.owner-nav button{justify-content:center;gap:7px;padding:10px 7px;font-size:.82rem}.owner-nav button span{width:24px;height:24px}}
+@media(max-width:560px){.owner-metrik{grid-template-columns:1fr 1fr}.owner-metrik-kartu:last-child{grid-column:1/-1}.owner-subgrid{grid-template-columns:1fr}.owner-grafik{gap:5px;height:190px}.owner-batang-latar{height:115px}.owner-kolom strong{font-size:.58rem}.owner-kolom small{font-size:.64rem}.owner-panel{padding:14px}.owner-kepala{margin-bottom:14px}}

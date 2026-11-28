@@ -6,6 +6,8 @@ const $=s=>document.querySelector(s);
 const setMode=p=>{
  document.body.classList.toggle('awal',!p);
  document.body.classList.toggle('kasir',p==='kasir');
+ document.body.classList.toggle('owner',p==='owner');
+ document.body.classList.toggle('manajemen',p==='manajemen');
 };
 const hr=()=>{
  const e=$('#jam');if(!e)return;
@@ -63,14 +65,17 @@ function pilihPeran(){
  history.replaceState(null,'',location.pathname+location.search);
  $('main').innerHTML=kartuPanduanAwal()+'<section class="landing landing-pilih"><p>Pilih peran melalui menu untuk mulai menggunakan aplikasi.</p></section>';
 }
-function masuk(p){
+async function masuk(p){
  tutupMenu();
- if(p==='kasir'){
-  peran=p;setMode(p);history.replaceState(null,'','#kasir');coba(buka);return;
- }
  peran=p;setMode(p);
+ if(p==='kasir'){history.replaceState(null,'','#kasir');coba(buka);return;}
  history.replaceState(null,'',location.pathname+location.search);
- $('main').innerHTML=`<section class="peran"><div class="nota"><b>Informasi</b><small>Fitur khusus ${p==='owner'?'Owner':'Manajemen'} akan tersedia pada pengembangan berikutnya.</small></div></section>`;
+ if(p==='owner'){
+  try{const m=await import('./views/owner.js');m.default($('main'));}
+  catch(e){$('main').innerHTML=`<section class="peran"><div class="nota"><b>Gagal membuka Owner</b><small>${esc(e.message)}</small></div></section>`;}
+  return;
+ }
+ $('main').innerHTML=`<section class="peran"><div class="nota"><b>Informasi</b><small>Dashboard Manajemen akan disiapkan pada tahap berikutnya.</small></div></section>`;
 }
 $('#menu-toggle').addEventListener('click',toggleMenu);
 document.querySelectorAll('[data-peran]').forEach(b=>b.addEventListener('click',()=>masuk(b.dataset.peran)));
