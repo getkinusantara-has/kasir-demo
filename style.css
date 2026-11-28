@@ -90,22 +90,21 @@ body.awal header nav{display:none}
  body.kasir header nav{gap:0}
  body.kasir header nav a{padding:10px 11px}
 }
-
-/* Navigasi Kasir turun ke bawah jam pada layar HP */
 @media(max-width:700px){
- header{min-height:58px;padding:6px 10px;gap:8px;flex-wrap:wrap}
- header nav{position:static;order:3;width:100%;display:none!important;background:#fff;border-top:1px solid #c9d6ce;gap:0;justify-content:space-between}
+ header{min-height:58px;padding:6px 10px;gap:8px}
+ header nav{position:fixed;bottom:0;left:0;right:0;z-index:6;display:none!important;background:#fff;border-top:1px solid #c9d6ce;gap:0;padding-bottom:env(safe-area-inset-bottom)}
  body.kasir header nav{display:flex!important}
- header nav a{flex:1;min-width:0;text-align:center;border-radius:0;padding:10px 3px;font-size:.82rem;white-space:nowrap}
- header #jam{font-size:.72rem;white-space:normal;line-height:1.25;max-width:48%}
+ header nav a{flex:1;text-align:center;border-radius:0;padding:13px 3px;font-size:.82rem}
+ header #jam{font-size:.72rem;white-space:normal;line-height:1.25;max-width:130px}
  .brand img{height:29px}
  .brand span{font-size:.58rem}
- main{padding:12px 12px 24px}
+ main{padding:12px 12px 100px}
  .landing{margin:clamp(70px,16vh,130px) auto 0;padding:28px 12px}
  .peran{margin:24px auto;padding:12px}
  .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 @media print{.menu-peran{display:none}}
+
 
 /* Posisi jam di tengah header */
 header{position:sticky}
@@ -132,6 +131,7 @@ header #jam{
  }
 }
 
+
 /* Kartu panduan peran */
 .panduan{max-width:980px;margin:22px auto 24px;padding:22px;background:#fff;border:1px solid #dce6df;border-radius:16px;box-shadow:0 3px 14px rgba(23,36,29,.06)}
 .panduan-kepala{text-align:left;margin-bottom:18px}
@@ -153,3 +153,57 @@ header #jam{
 .panduan-info p{margin:0;color:#64736a;font-size:.88rem;line-height:1.45}
 .landing-pilih{margin:12px auto 32px;padding:8px 16px}
 @media(max-width:700px){.panduan-awal{margin:18px 0 0;padding:16px}.panduan-awal .panduan-daftar{grid-template-columns:1fr}.landing-pilih{margin:8px auto 24px;padding:8px 12px}}
+
+/* Navigasi kasir dipindahkan ke baris kedua agar tidak bertumpuk dengan jam/logo */
+@media(min-width:701px){
+ header{flex-wrap:wrap;row-gap:6px}
+ body.kasir header nav{
+  order:3;
+  flex:0 0 100%;
+  justify-content:center;
+  margin:4px -18px -8px;
+  padding:6px 12px 2px;
+  border-top:1px solid #e4ebe6;
+ }
+}
+@media(max-width:700px){
+ header{flex-wrap:wrap;row-gap:6px}
+ body.kasir header nav{
+  position:static;
+  order:3;
+  flex:0 0 calc(100% + 20px);
+  width:calc(100% + 20px);
+  left:auto;
+  right:auto;
+  bottom:auto;
+  display:flex!important;
+  overflow-x:auto;
+  justify-content:space-between;
+  margin:0 -10px -6px;
+  padding:5px 6px 0;
+  border-top:1px solid #e4ebe6;
+  border-bottom:0;
+  background:#fff;
+ }
+ body.kasir header nav a{
+  flex:1 0 auto;
+  white-space:nowrap;
+  padding:10px 9px;
+  font-size:.8rem;
+ }
+}
+
+
+/* Perbaikan v23: jam tetap di baris header pertama, navigasi kasir di bawahnya */
+@media(min-width:701px){
+  header #jam{
+    top:32px;
+    transform:translate(-50%,-50%);
+  }
+}
+@media(max-width:700px){
+  header #jam{
+    top:29px;
+    transform:translate(-50%,-50%);
+  }
+}
